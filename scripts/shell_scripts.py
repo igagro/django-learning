@@ -49,7 +49,7 @@ data = {
     'password': 'djangoapp'
 }
 
-r = requests.post(ENDPOINT, data=json.dumps(data), headers=headers)
+r = requests.post(AUTH_ENDPOINT, data=json.dumps(data), headers=headers)
 token = r.json()  # ['token']
 
 print(token)
