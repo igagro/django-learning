@@ -17,6 +17,7 @@ psycopg2 = "*"
 djangorestframework-jwt = "*"
 python-decouple = "*"
 requests = "*"
+pillow = "*"
 
 [requires]
 python_version = "3.5"
