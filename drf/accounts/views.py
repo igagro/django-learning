@@ -4,7 +4,7 @@ from rest_framework import permissions, generics
 from rest_framework_jwt.settings import api_settings
 
 from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db.models import Q
 
 from .models import *
@@ -15,11 +15,10 @@ jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 jwt_response_payload_handler = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER
 
-# User = get_user_model()
+User = get_user_model()
 
 
 class ExampleView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):
         content = {
@@ -57,16 +56,6 @@ class LoginView(APIView):
         return Response({'detail': "Invalid credentials"}, status=401)
 
 
-class RegisterAPIView(APIView):
-    def get(self, format=None):
-        profile = Profile.objects.all()
-        serializer = ProfileSerializer(profile, many=True)
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = ProfileSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=ValueError):
-            serializer.create(validated_data=request.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.error_messages,
-                        status=status.HTTP_400_BAD_REQUEST)
+class RegisterAPIView(generics.CreateAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [permissions.AllowAny]
