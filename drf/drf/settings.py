@@ -27,7 +27,6 @@ SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-POSTGRE_PASS = config('POSTGRE_PASS')
 ALLOWED_HOSTS = []
 
 
@@ -83,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'django-learning',
         'USER': 'postgres',
-        'PASSWORD': POSTGRE_PASS,
+        'PASSWORD': config('POSTGRE_PASS'),
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
@@ -127,17 +126,25 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+# MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR),
+#                           'drf\\accounts\\static-resources\\media-root')
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR),
+                          'drf\\static-resources')
+MEDIA_URL = '/media/'
+
+# REST Framework
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     )
 }
+
+# JWT Token
 
 JWT_AUTH = {
     'JWT_ENCODE_HANDLER':
@@ -153,8 +160,7 @@ JWT_AUTH = {
     'rest_framework_jwt.utils.jwt_get_user_id_from_payload_handler',
 
     'JWT_RESPONSE_PAYLOAD_HANDLER':
-    # 'rest_framework_jwt.utils.jwt_response_payload_handler',
-    'accounts.utils.jwt_response_payload_handler',
+    'rest_framework_jwt.utils.jwt_response_payload_handler',
 
     'JWT_ALLOW_REFRESH': True,
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
