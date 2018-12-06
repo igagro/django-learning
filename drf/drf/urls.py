@@ -19,6 +19,6 @@ from accounts import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/test/', views.ExampleView.as_view()),  # testing auth
+    path('api/university/', include('university.urls')),
     path('api/auth/', include('accounts.urls'))
 ]

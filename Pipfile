@@ -18,6 +18,8 @@ djangorestframework-jwt = "*"
 python-decouple = "*"
 requests = "*"
 pillow = "*"
+django-countries = "*"
+django-localflavor = "*"
 
 [requires]
 python_version = "3.5"
