@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'accounts',
     'university',
-    'pkg'
+    'pkg',
+    'django_countries'
 ]
 
 MIDDLEWARE = [
