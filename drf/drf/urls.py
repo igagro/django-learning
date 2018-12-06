@@ -20,5 +20,6 @@ from accounts import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/university/', include('university.urls')),
+    path('api/school/', include('school.urls')),
     path('api/auth/', include('accounts.urls'))
 ]

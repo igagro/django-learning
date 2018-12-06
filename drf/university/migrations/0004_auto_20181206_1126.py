@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='university',
             name='state',
-            field=localflavor.us.models.USStateField(blank=True, max_length=2, null=True),
+            field=localflavor.us.models.USStateField(blank=True, max_length=2,
+                                                     null=True),
         ),
     ]

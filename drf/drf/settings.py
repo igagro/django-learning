@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'accounts',
     'university',
+    'school',
     'pkg',
     'django_countries'
 ]

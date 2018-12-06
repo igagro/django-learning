@@ -1,7 +1,6 @@
-from localflavor.us.models import USStateField
-from django_countries.fields import CountryField
 from django.db import models
-from pkg.models import CommonDates
+from pkg.models import CommonModel
+from school.models import School
 
 
 def upload_logo_image(instance, filename):
@@ -9,12 +8,16 @@ def upload_logo_image(instance, filename):
                                                 filename=filename)
 
 
-class University(CommonDates):
-    name = models.CharField(max_length=50)
-    address = models.CharField(max_length=50, null=True, blank=True)
-    city = models.CharField(max_length=30, null=True, blank=True)
-    country = CountryField(null=True, blank=True)
-    state = USStateField(null=True, blank=True)
-    description = models.TextField(max_length=200, null=True, blank=True)
+class University(CommonModel):
+    schools = models.ManyToManyField(School)
     logo_url = models.ImageField(
-        upload_to=upload_logo_image, null=True, blank=True)
+        upload_to=upload_logo_image,
+        null=True,
+        blank=True
+    )
+
+    def __unicode__(self):
+        return '%d: %s' % (self.pk, self.name)
+
+    def __str__(self):
+        return self.name
