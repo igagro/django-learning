@@ -3,8 +3,8 @@ from pkg.models import CommonDates
 
 
 def upload_logo_image(instance, filename):
-    return "university/{user}/{filename}".format(user=instance.user,
-                                                 filename=filename)
+    return "university/{unv}/{filename}".format(unv=instance.name,
+                                                filename=filename)
 
 
 class University(CommonDates):
