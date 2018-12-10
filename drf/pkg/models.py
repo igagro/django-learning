@@ -1,9 +1,9 @@
+from django.db import models
 from localflavor.us.models import USStateField
 from django_countries.fields import CountryField
-from django.db import models
 
 
-class CommonModel(models.Model):
+class AbstractModel(models.Model):
     name = models.CharField(max_length=50)
     address = models.CharField(max_length=50, null=True, blank=True)
     city = models.CharField(max_length=30, null=True, blank=True)
