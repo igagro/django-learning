@@ -19,7 +19,11 @@ class UniversitySchoolsList(ListCreateAPIView):
     serializer_class = UniversitySchoolSerializer
 
     def get_serializer_context(self):
-        return {'university_id': self.kwargs.get('university_id')}
+        context = super().get_serializer_context()
+        context.update({
+            'university_id': self.kwargs.get('university_id')
+        })
+        return context
 
     def get_queryset(self):
         return UniversitySchools.objects.filter(
@@ -29,10 +33,6 @@ class UniversitySchoolsList(ListCreateAPIView):
 class UniversitySchoolDetails(RetrieveUpdateDestroyAPIView):
     serializer_class = UniversitySchoolSerializer
     lookup_field = 'school_id'
-
-    def get_serializer_context(self):
-        return {'university_id': self.kwargs.get('university_id'),
-                'school_id': self.kwargs.get('school_id')}
 
     def get_queryset(self):
         return UniversitySchools.objects.filter(

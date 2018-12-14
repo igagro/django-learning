@@ -18,32 +18,19 @@ class UniversitySchoolSerializer(serializers.ModelSerializer):
         university_id = self.context.get('university_id')
         main_school = validated_data.pop('is_main_school')
         if main_school:
-            old_main_school = UniversitySchools.objects.filter(
+            UniversitySchools.objects.filter(
                 university=university_id,
                 is_main_school=True).update(is_main_school=False)
         school = School.objects.create(**validated_data['school'])
-        university = University.objects.get(pk=university_id)
-        unv_sch = UniversitySchools.objects.create(university=university,
+        unv_sch = UniversitySchools.objects.create(university_id=university_id,
                                                    school=school,
                                                    is_main_school=main_school)
         return unv_sch
 
     @transaction.atomic
     def update(self, instance, validated_data):
-        instance.school.name = validated_data['school'].get(
-            'name', instance.school.name)
-        instance.school.address = validated_data['school'].get(
-            'address', instance.school.address)
-        instance.school.city = validated_data['school'].get(
-            'city', instance.school.city)
-        instance.school.country = validated_data['school'].get(
-            'country', instance.school.country)
-        instance.school.state = validated_data['school'].get(
-            'state', instance.school.state)
-        instance.school.description = validated_data['school'].get(
-            'description', instance.school.description)
-        instance.school.logo_url = validated_data['school'].get(
-            'logo_url', instance.school.logo_url)
+        School.objects.filter(pk=instance.school.pk).update(
+            **validated_data['school'])
         instance.is_main_school = validated_data.get(
             'is_main_school', instance.is_main_school)
         instance.save()
