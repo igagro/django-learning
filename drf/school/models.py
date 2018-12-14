@@ -1,5 +1,5 @@
 from django.db import models
-from pkg.models import AbstractModel
+from pkg.models import CommonModel
 
 
 def upload_logo_image(instance, filename):
@@ -7,7 +7,7 @@ def upload_logo_image(instance, filename):
                                                filename=filename)
 
 
-class School(AbstractModel):
+class School(CommonModel):
     logo_url = models.ImageField(
         upload_to=upload_logo_image,
         null=True,

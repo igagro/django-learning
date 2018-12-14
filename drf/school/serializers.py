@@ -5,8 +5,6 @@ from university.models import University
 
 
 class SchoolSerializer(CountryFieldMixin, serializers.ModelSerializer):
-    universities = serializers.HyperlinkedRelatedField(
-        many=True, queryset=University.objects.all(), view_name='university-detail')
 
     class Meta:
         model = School

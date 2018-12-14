@@ -1,9 +1,8 @@
-from .serializers import UniversitySerializer
+from .serializers import UniversitySerializer, UniversitySchoolSerializer
 from school.serializers import SchoolSerializer
-from .models import University
+from .models import University, UniversitySchools
 from rest_framework.generics import (ListCreateAPIView,
-                                     RetrieveUpdateDestroyAPIView,
-                                     ListAPIView)
+                                     RetrieveUpdateDestroyAPIView)
 
 
 class UniversityListCreate(ListCreateAPIView):
@@ -17,19 +16,24 @@ class UniversityDetail(RetrieveUpdateDestroyAPIView):
 
 
 class UniversitySchoolsList(ListCreateAPIView):
-    serializer_class = SchoolSerializer
+    serializer_class = UniversitySchoolSerializer
+
+    def get_serializer_context(self):
+        return {'university_id': self.kwargs.get('university_id')}
 
     def get_queryset(self):
-        university = University.objects.get(
-            pk=self.kwargs.get('pk'))
-        return university.schools.all()
+        return UniversitySchools.objects.filter(
+            university=self.kwargs.get('university_id'))
 
 
 class UniversitySchoolDetails(RetrieveUpdateDestroyAPIView):
-    serializer_class = SchoolSerializer
+    serializer_class = UniversitySchoolSerializer
+    lookup_field = 'school_id'
+
+    def get_serializer_context(self):
+        return {'university_id': self.kwargs.get('university_id'),
+                'school_id': self.kwargs.get('school_id')}
 
     def get_queryset(self):
-        university = University.objects.get(
-            pk=self.kwargs.get('pk'))
-        school = university.schools.filter(pk=self.kwargs.get('pk_school'))
-        return school
+        return UniversitySchools.objects.filter(
+            university=self.kwargs.get('university_id'))
