@@ -9,7 +9,7 @@ EDIT = 2
 DELETE = 3
 
 
-class CanAddObject(permissions.BasePermission):
+class CanAddUniversity(permissions.BasePermission):
     """
     Permission for create or read university
     """
@@ -19,30 +19,13 @@ class CanAddObject(permissions.BasePermission):
 
         if request.method in permissions.SAFE_METHODS:
             return True
-
-        """
-        TO DO
-        Need to check how to pass queryset 
-        from UniversitySchools to has_permission arg "view"
-        This is temporary solution
-        """
-        role_type = None
-
-        if view.queryset is not None:
-            if view.queryset.model is University:
-                role_type = 'UNV'
-            elif view.queryset.model is School:
-                role_type = 'SCH'
-        else:
-            role_type = 'UNV'
-
         """
         Only user with roles who have UNV role_type and ADD permission
         can create University
         """
 
         if RolePermission.objects.filter(
-            role__role_type=role_type,
+            role__role_type='UNV',
             permission=ADD,
             role__profiles=request.user.profile
         ).exists():
@@ -51,9 +34,35 @@ class CanAddObject(permissions.BasePermission):
             return False
 
 
-class CanEditOrRemoveObject(permissions.BasePermission):
+class CanAddSchool(permissions.BasePermission):
     """
-    Permission allow user to edit or delete university object
+    Permission for create or read school
+    """
+    message = "Adding school objects not allowed"
+
+    def has_permission(self, request, view):
+
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        """
+        Only user with roles who have SCH role_type and ADD permission
+        can create School
+        """
+
+        if RolePermission.objects.filter(
+            role__role_type='SCH',
+            permission=ADD,
+            role__profiles=request.user.profile
+        ).exists():
+            return True
+        else:
+            return False
+
+
+class CanEditOrRemoveUniversity(permissions.BasePermission):
+    """
+    Permission allow user to edit or delete University object
     """
     message = "Editing or removing university objects not allowed"
 
@@ -63,17 +72,32 @@ class CanEditOrRemoveObject(permissions.BasePermission):
         and EDIT and DELETE permissions
         can edit or remove University
         """
-        role_type = None
-
-        if obj._meta.concrete_model is University:
-            role_type = 'UNV'
-        elif obj._meta.concrete_model is School:
-            role_type = 'SCH'
-        else:
-            role_type = 'UNV'
 
         if RolePermission.objects.filter(
-            role__role_type=role_type,
+            role__role_type='UNV',
+            permission__in=[ADD, DELETE],
+            role__profiles=request.user.profile
+        ).exists():
+            return True
+        else:
+            return False
+
+
+class CanEditOrRemoveSchool(permissions.BasePermission):
+    """
+    Permission allow user to edit or delete School object
+    """
+    message = "Editing or removing school objects not allowed"
+
+    def has_object_permission(self, request, view, obj):
+        """
+        Only user with roles who have SCH role_type
+        and EDIT and DELETE permissions
+        can edit or remove School
+        """
+
+        if RolePermission.objects.filter(
+            role__role_type='SCH',
             permission__in=[ADD, DELETE],
             role__profiles=request.user.profile
         ).exists():

@@ -5,6 +5,7 @@ from rest_framework_jwt.settings import api_settings
 
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 
 from .models import *
 from .permissions import AnnonPermisionOnly
@@ -34,11 +35,10 @@ class LoginView(APIView):
         password = data.get('password')
         user = authenticate(username=username, password=password)
 
-        try:
-            user_obj = User.objects.get(Q(username__iexact=username) |
-                                        Q(email__iexact=username))
-        except User.DoesNotExist as ex:
-            return Response({'detail': str(ex)}, status=404)
+        user_obj = User.objects.get_object_or_404(
+            Q(username__iexact=username) |
+            Q(email__iexact=username)
+        )
 
         if user_obj.check_password(password):
             user = user_obj
