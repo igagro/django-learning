@@ -14,8 +14,26 @@ jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 jwt_response_payload_handler = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER
 
 
+class UserLoginSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        write_only=True,
+        required=True,
+        style={'input_type': 'password'}
+    )
+
+    class Meta:
+        model = User
+        fields = ('username', 'password')
+
+
 class UserRegisterSerializer(serializers.ModelSerializer):
     token_response = serializers.SerializerMethodField(read_only=True)
+
+    password = serializers.CharField(
+        write_only=True,
+        required=True,
+        style={'input_type': 'password'}
+    )
 
     class Meta:
         model = User
@@ -27,9 +45,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             'password',
             'token_response'
         ]
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
 
     def get_token_response(self, user):
         payload = jwt_payload_handler(user)
@@ -44,7 +59,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('user', 'image_url', 'message',)
+        fields = ('user', 'image_url', 'message', 'roles')
 
     extra_kwargs = {'image_url': {'required': False}}
 
@@ -59,5 +74,8 @@ class ProfileSerializer(serializers.ModelSerializer):
         user = UserRegisterSerializer.create(
             UserRegisterSerializer(), validated_data=user_data)
         profile = Profile.objects.create(
-            user=user, image_url=validated_data.pop('image_url'))
+            user=user,
+            image_url=validated_data.pop('image_url'),
+        )
+        profile.roles.add(*validated_data['roles'])
         return profile

@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from pkg.models import Role
 
 from .utils import upload_profile_image
 
@@ -14,3 +15,4 @@ class Profile(models.Model):
     )
     image_url = models.ImageField(
         upload_to=upload_profile_image, null=True, blank=True)
+    roles = models.ManyToManyField(Role, related_name='profiles')
