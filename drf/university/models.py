@@ -1,6 +1,7 @@
 from django.db import models
 from pkg.models import CommonModel
 from school.models import School
+from django.conf import settings
 
 
 def upload_logo_image(instance, filename):
