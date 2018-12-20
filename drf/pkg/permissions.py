@@ -24,14 +24,11 @@ class CanAddUniversity(permissions.BasePermission):
         can create University
         """
 
-        if RolePermission.objects.filter(
+        return RolePermission.objects.filter(
             role__role_type='UNV',
             permission=ADD,
             role__profiles=request.user.profile
-        ).exists():
-            return True
-        else:
-            return False
+        ).exists()
 
 
 class CanAddSchool(permissions.BasePermission):
@@ -50,14 +47,11 @@ class CanAddSchool(permissions.BasePermission):
         can create School
         """
 
-        if RolePermission.objects.filter(
+        return RolePermission.objects.filter(
             role__role_type='SCH',
             permission=ADD,
             role__profiles=request.user.profile
-        ).exists():
-            return True
-        else:
-            return False
+        ).exists()
 
 
 class CanEditOrRemoveUniversity(permissions.BasePermission):
@@ -73,14 +67,11 @@ class CanEditOrRemoveUniversity(permissions.BasePermission):
         can edit or remove University
         """
 
-        if RolePermission.objects.filter(
+        return RolePermission.objects.filter(
             role__role_type='UNV',
             permission__in=[ADD, DELETE],
             role__profiles=request.user.profile
-        ).exists():
-            return True
-        else:
-            return False
+        ).exists()
 
 
 class CanEditOrRemoveSchool(permissions.BasePermission):
@@ -96,11 +87,8 @@ class CanEditOrRemoveSchool(permissions.BasePermission):
         can edit or remove School
         """
 
-        if RolePermission.objects.filter(
+        return RolePermission.objects.filter(
             role__role_type='SCH',
             permission__in=[ADD, DELETE],
             role__profiles=request.user.profile
-        ).exists():
-            return True
-        else:
-            return False
+        ).exists()
