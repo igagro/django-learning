@@ -35,9 +35,8 @@ class LoginView(APIView):
         password = data.get('password')
         user = authenticate(username=username, password=password)
 
-        user_obj = User.objects.get_object_or_404(
-            Q(username__iexact=username) |
-            Q(email__iexact=username)
+        user_obj = get_object_or_404(
+            User, Q(username__iexact=username) | Q(email__iexact=username)
         )
 
         if user_obj.check_password(password):

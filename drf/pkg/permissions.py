@@ -4,9 +4,9 @@ from pkg.models import Role, Permission, RolePermission
 from django.db.models import Q
 from university.models import University, School, UniversitySchools
 
-ADD = 1
-EDIT = 2
-DELETE = 3
+ADD = 'ADD'
+EDIT = 'EDIT'
+DELETE = 'DELETE'
 
 
 class CanAddUniversity(permissions.BasePermission):
@@ -26,7 +26,7 @@ class CanAddUniversity(permissions.BasePermission):
 
         return RolePermission.objects.filter(
             role__role_type='UNV',
-            permission=ADD,
+            permission__name=ADD,
             role__profiles=request.user.profile
         ).exists()
 
@@ -49,7 +49,7 @@ class CanAddSchool(permissions.BasePermission):
 
         return RolePermission.objects.filter(
             role__role_type='SCH',
-            permission=ADD,
+            permission__name=ADD,
             role__profiles=request.user.profile
         ).exists()
 
@@ -69,7 +69,7 @@ class CanEditOrRemoveUniversity(permissions.BasePermission):
 
         return RolePermission.objects.filter(
             role__role_type='UNV',
-            permission__in=[ADD, DELETE],
+            permission__name__in=[EDIT, DELETE],
             role__profiles=request.user.profile
         ).exists()
 
@@ -89,6 +89,6 @@ class CanEditOrRemoveSchool(permissions.BasePermission):
 
         return RolePermission.objects.filter(
             role__role_type='SCH',
-            permission__in=[ADD, DELETE],
+            permission__name__in=[EDIT, DELETE],
             role__profiles=request.user.profile
         ).exists()

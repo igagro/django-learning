@@ -14,5 +14,12 @@ class Profile(models.Model):
         on_delete=models.CASCADE
     )
     image_url = models.ImageField(
-        upload_to=upload_profile_image, null=True, blank=True)
-    roles = models.ManyToManyField(Role, related_name='profiles')
+        upload_to=upload_profile_image,
+        null=True,
+        blank=True
+    )
+    roles = models.ManyToManyField(
+        Role,
+        related_name='profiles',
+        blank=True
+    )
